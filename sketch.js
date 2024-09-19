@@ -21,8 +21,8 @@ document.querySelector("div").addEventListener("click", async() => {
         await Tone.start();
         console.log("audio is ready");
         if (player.loaded) {
-            posMod = Math.random() * buffer.duration;
-            player.start(0, posMod);
+            playbackPos = Math.random() * buffer.duration;
+            player.start(0, playbackPos);
             stopped = false;
             playing = true;
             console.log('play')
@@ -98,44 +98,10 @@ function draw() {
     }
     if (playing) {
         if (frameCount % 60 == 0) {
-            playbackPos += player.playbackRate * playbackDir;
-            posMod = (buffer.duration + playbackPos) % buffer.duration
+            playbackPos += (player.playbackRate * playbackDir) % buffer.duration;
         }
     }
 }
-
-// function mousePressed() {
-//     if (player.loaded) {
-//         if (mouseX > (window.innerWidth / 2 - 50) && mouseX < (window.innerWidth / 2 + 50)) {
-//             if (stopped) {
-//                 player.start(0, posMod);
-//                 stopped = false;
-//                 playing = true;
-//             } else if (ffwd || rwind) {
-//                 player.playbackRate = 1;
-//                 ffwd = false;
-//                 rwind = false;
-//                 player.reverse = false;
-//                 playbackDir = 1;
-//                 player.start(0, posMod);
-//             } else {
-//                 player.stop();
-//                 stopped = true;
-//                 playing = false;
-//             }
-//         } else if (mouseX > (window.innerWidth / 2 + 200) && mouseX < window.innerWidth) {
-//             player.playbackRate = 5;
-//             player.reverse = false;
-//             ffwd = true;
-//             playbackDir = 1;
-//         } else if (mouseX < (window.innerWidth / 2 - 200) && mouseX > 0) {
-//             player.playbackRate = 5;
-//             player.reverse = true;
-//             rwind = true;
-//             playbackDir = -1;
-//         }
-//     }
-// }
 
 
 function touchStarted() {
@@ -147,7 +113,7 @@ function touchStarted() {
                 if (y < midY + 200 && y > midY - 200) {
                     if (x > (midX - 50) && x < (midX + 50)) {
                         if (stopped) {
-                            player.start(0, posMod);
+                            player.start(0, playbackPos);
                             stopped = false;
                             playing = true;
                             console.log('play');
