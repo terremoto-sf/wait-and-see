@@ -1,4 +1,5 @@
 let bg;
+let font;
 let firstTouch = true;
 let stopped = true;
 let playing = false;
@@ -10,7 +11,7 @@ let posMod = 0;
 let midX;
 let midY;
 let angle = 0;
-let buffer = new Tone.ToneAudioBuffer("tp_short_2.mp3", () => {
+let buffer = new Tone.ToneAudioBuffer("tp_short.mp3", () => {
     console.log('buffer loaded');
 })
 const player = new Tone.Player(buffer).toDestination();
@@ -20,6 +21,7 @@ document.querySelector("div").addEventListener("click", async() => {
         await Tone.start();
         console.log("audio is ready");
         if (player.loaded) {
+            posMod = Math.random() * buffer.duration;
             player.start(0, posMod);
             stopped = false;
             playing = true;
@@ -30,26 +32,40 @@ document.querySelector("div").addEventListener("click", async() => {
 });
 
 function preload() {
-    bg = loadImage('tp_05.jpg')
+    bg = loadImage('tp_05.jpg');
+    font = loadFont('MabryPro-Regular.ttf');
 }
 
 function setup() {
     cnv = createCanvas(window.innerWidth, window.innerHeight);
     cnv.parent('canvas-holder');
     background(0);
-    rectMode(CENTER);
+    // rectMode(CENTER);
     imageMode(CENTER);
-    noFill();
-    stroke(0);
-    strokeWeight(10)
     midX = window.innerWidth / 2;
     midY = window.innerHeight / 2;
     image(bg, midX, midY);
+    noStroke();
+    fill(255, 60);
+    rect(0, 0, window.innerWidth, window.innerHeight);
+    textFont(font, 48)
 }
 
 function draw() {
     if (player.loaded) {
         image(bg, midX, midY);
+        noStroke();
+        fill(255, 60);
+        rect(0, 0, window.innerWidth, window.innerHeight);
+        stroke(0);
+        strokeWeight(2);
+        fill(0)
+        textSize(48)
+        text('wait & see', 10, 40);
+        textSize(36)
+        text('TERRE', windowWidth - 255, windowHeight - 25);
+        text('MOTO', windowWidth - 130, windowHeight - 10);
+        strokeWeight(10)
         if (stopped || ffwd || rwind) {
             fill(0, 100);
         } else {
@@ -71,12 +87,14 @@ function draw() {
         triangle(100, midY - 50, 50, midY, 100, midY + 50)
         triangle(75, midY - 50, 25, midY, 75, midY + 50)
     } else {
-        fill(255);
+        fill(0);
         circle((midX - 100) + frameCount % 200, midY, 30)
         if (frameCount % 200 == 0) {
             image(bg, midX, midY);
+            noStroke();
+            fill(255, 60);
+            rect(0, 0, window.innerWidth, window.innerHeight);
         }
-
     }
     if (playing) {
         if (frameCount % 60 == 0) {
@@ -139,7 +157,6 @@ function touchStarted() {
                             rwind = false;
                             player.reverse = false;
                             playbackDir = 1;
-                            player.start(0, posMod);
                         } else {
                             player.stop();
                             stopped = true;
